@@ -1,0 +1,26 @@
+# Public image — synthesized models only. Real enterprise weights must NEVER be in this image.
+# Build: docker build -f Dockerfile.public --build-arg MODEL_SET=public -t model-delta-api:public .
+
+FROM python:3.12-slim
+
+ARG MODEL_SET
+RUN if [ "$MODEL_SET" != "public" ]; then echo "ERROR: Dockerfile.public must be built with --build-arg MODEL_SET=public" && exit 1; fi
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Guard: fail if MODEL_ROOT looks like a real-data path
+ARG MODELS_SRC
+RUN echo "$MODELS_SRC" | grep -qiE "(asset-taxonomy|EPIC|real|enterprise)" && \
+    echo "ERROR: MODELS_SRC path suggests real enterprise data. Aborting public build." && exit 1 || true
+
+COPY --from=builder /models /app/models
+COPY . .
+
+ENV MODEL_ROOT=/app/models
+ENV APP_ENV=public
+
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

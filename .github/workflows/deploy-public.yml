@@ -1,0 +1,30 @@
+name: Deploy public to Fly.io
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download synthesized models
+        # Models stored as GitHub Release assets — no Google Drive dependency in CI
+        run: |
+          gh release download synthesized-models-v1 --dir ./models-public
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Guard — verify no real model paths
+        run: |
+          echo "${{ secrets.MODEL_ROOT_PUBLIC }}" | grep -qiE "(asset-taxonomy|EPIC|real|enterprise)" && \
+            echo "ERROR: MODEL_ROOT_PUBLIC contains real data path" && exit 1 || echo "Path check passed"
+
+      - name: Build and deploy
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - run: flyctl deploy --remote-only --build-arg MODEL_SET=public --build-arg MODELS_SRC=./models-public
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

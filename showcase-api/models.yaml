@@ -1,0 +1,55 @@
+# Model registry — model-delta showcase
+# Paths are relative to MODEL_ROOT env var.
+# registry.py resolves: Path(os.environ["MODEL_ROOT"]) / model["path"] / model["checkpoint"]
+# To add a new model: add an entry below, set active: true, redeploy.
+
+models:
+  - id: tfidf-v3
+    label: "TF-IDF v3 (baseline)"
+    type: sklearn
+    path: models/v3
+    checkpoint: null          # sklearn: path contains joblib files directly
+    active: true
+    color: indigo
+    metrics:
+      pf_top1: 0.788
+      tech_top1: 0.661
+      brand_top1: 0.529
+      toolname_top1: 0.818
+    memory_mb: 50             # approximate resident RAM for monitoring
+
+  - id: modernbert-pf-v1
+    label: "ModernBERT PF"
+    type: modernbert
+    head: product_family
+    path: slm/models/pf
+    checkpoint: checkpoint-966
+    active: true
+    color: amber
+    metrics:
+      pf_top1: 0.859
+    memory_mb: 620
+
+  - id: modernbert-tech-v1
+    label: "ModernBERT TECH"
+    type: modernbert
+    head: technology
+    path: slm/models/tech
+    checkpoint: checkpoint-1932
+    active: true
+    color: green
+    metrics:
+      tech_top1: 0.765
+    memory_mb: 620
+
+  - id: modernbert-brand-v1
+    label: "ModernBERT BRAND"
+    type: modernbert
+    head: brand
+    path: slm/models/brand
+    checkpoint: checkpoint-2312
+    active: true
+    color: pink
+    metrics:
+      brand_top1: 0.803
+    memory_mb: 620

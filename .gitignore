@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.env
+*.env
+
+# Models — never commit real or synthesized weights
+models-internal/
+models-real/
+*.joblib
+*.safetensors
+*.bin
+checkpoint-*/
+
+# Node / Angular
+showcase-ui/node_modules/
+showcase-ui/dist/
+showcase-ui/.angular/
+
+# Local dev
+.DS_Store
+*.log
