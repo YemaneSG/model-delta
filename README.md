@@ -23,13 +23,32 @@ The TOOLNAME head stays with TF-IDF — ModernBERT lost by 12.9pp there. This ap
 
 ## Run locally
 
+### Docker (Phase 3 — recommended)
+
+```bash
+# 1. Create .env from the example
+cp .env.example .env
+# Edit .env — set ML_PIPELINE_PATH to your local ml_pipeline directory
+# Windows:  ML_PIPELINE_PATH=C:/Users/YGebremedhin/Code/asset-taxonomy-classifier/ml_pipeline
+# Mac Mini: ML_PIPELINE_PATH=/Users/yemane/Code/asset-taxonomy-classifier/ml_pipeline
+
+# 2. Build and run
+docker compose up --build
+
+# API → http://localhost:8000
+# UI  → http://localhost:4200
+```
+
+The API container waits until all models are loaded before marking itself healthy; the UI container starts only after the health check passes (~60-90s on first load).
+
+### Dev mode (no Docker)
+
 ```bash
 # Backend
 cd showcase-api
-pip install -r requirements.txt
-MODEL_ROOT=/path/to/ml_pipeline uvicorn main:app --reload
+MODEL_ROOT=/path/to/ml_pipeline uv run uvicorn main:app --reload
 
-# Frontend (Phase 2)
+# Frontend
 cd showcase-ui
 ng serve
 ```

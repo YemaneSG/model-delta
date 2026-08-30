@@ -1,0 +1,34 @@
+services:
+  api:
+    build:
+      context: ./showcase-api
+      dockerfile: Dockerfile.internal
+    image: model-delta-api:internal
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_ROOT=/models
+      - APP_ENV=internal
+    volumes:
+      # Mount the real ml_pipeline directory read-only — never bakes enterprise data into the image
+      - type: bind
+        source: ${ML_PIPELINE_PATH}
+        target: /models
+        read_only: true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  ui:
+    build:
+      context: ./showcase-ui
+      dockerfile: Dockerfile
+    image: model-delta-ui:local
+    ports:
+      - "4200:80"
+    depends_on:
+      api:
+        condition: service_healthy
