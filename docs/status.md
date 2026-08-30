@@ -11,7 +11,7 @@ _Last updated: 2026-08-30_
 | 0 — Scaffold + BLOCKERs resolved | ✅ Done | ModelLoader ABC, MODEL_ROOT, rate limiting, /health, two Dockerfiles, CI model source |
 | 1 — FastAPI backend | ✅ Done | 4 models serving at localhost:8000 — /health, /models, /predict |
 | 2 — Angular frontend | ✅ Done | Live inference UI at localhost:4200 — model selector, side-by-side columns, delta badges |
-| 3 — Local Docker | 🔄 Built, pending test | docker-compose, nginx UI, CPU-only PyTorch. Run `docker compose up --build` to verify. |
+| 3 — Local Docker | ✅ Done | docker-compose verified — 4 models loaded, nginx UI live at localhost:4200. Fixed: `@angular/animations` missing from prod build. |
 | 4 — Fly.io public deploy | 🔒 Blocked | Needs synthesized aerospace proxy models. No real SLB data in public image. |
 | 5 — UI polish | ⏳ Queued | Premium dark mode, hierarchy paths, per-model colors, error/retry, mobile layout |
 
