@@ -13,11 +13,10 @@ _POOL = ThreadPoolExecutor(max_workers=int(os.getenv("INFERENCE_WORKERS", str(os
 
 async def run_parallel(model_ids: list[str], part_number: str, description: str) -> dict[str, PredictionResult]:
     loop = asyncio.get_running_loop()
-    tasks = {
-        mid: loop.run_in_executor(_POOL, registry.get(mid).predict, part_number, description)
+    # gather dispatches all executors concurrently — sklearn releases GIL and runs in parallel;
+    # PyTorch CPU holds GIL so serializes, but latency per model is still measured independently.
+    results_list = await asyncio.gather(*[
+        loop.run_in_executor(_POOL, registry.get(mid).predict, part_number, description)
         for mid in model_ids
-    }
-    results = {}
-    for mid, coro in tasks.items():
-        results[mid] = await coro
-    return results
+    ])
+    return dict(zip(model_ids, results_list))
