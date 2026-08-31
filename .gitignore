@@ -19,6 +19,10 @@ showcase-ui/node_modules/
 showcase-ui/dist/
 showcase-ui/.angular/
 
+# Synthesis — raw data and checkpoints stay local, only trained artifacts go to Release
+synthesis/synthesized_*.csv
+synthesis/checkpoint.jsonl
+
 # Local dev
 .DS_Store
 *.log
