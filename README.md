@@ -14,6 +14,19 @@ Live inference showcase. Select model versions, enter a part number and descript
 
 The TOOLNAME head stays with TF-IDF — ModernBERT lost by 12.9pp there. This app shows that too.
 
+## Model Performance — Public Build
+
+Public build uses proxy models trained on 49,980 synthetic oilfield records. No proprietary enterprise data.
+
+| Head | TF-IDF proxy | ModernBERT proxy | Delta |
+|---|---|---|---|
+| Product Family | 0.924 | 0.933 | +0.9pp |
+| Technology | 0.387 | 0.551 | +16.4pp |
+| Brand | 0.223 | 0.245 | +2.2pp |
+| Toolname | 0.138 | — | TF-IDF wins |
+
+*ModernBERT backbone: answerdotai/ModernBERT-large. TOOLNAME head uses TF-IDF (2,066 classes, sparse signal — right tool for the right job).*
+
 ## Stack
 
 - **Backend**: FastAPI + PyTorch + scikit-learn

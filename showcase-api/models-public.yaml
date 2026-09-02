@@ -1,22 +1,23 @@
-# Model registry — model-delta showcase
-# Paths are relative to MODEL_ROOT env var.
+# Model registry — PUBLIC Fly.io deploy
+# Uses synthesized proxy models only — no real SLB enterprise data.
+# CI uses this file instead of models.yaml when building the public image.
 # registry.py resolves: Path(os.environ["MODEL_ROOT"]) / model["path"] / model["checkpoint"]
-# To add a new model: add an entry below, set active: true, redeploy.
 
 models:
+  # Real SLB models — disabled in public build
   - id: tfidf-v3
     label: "TF-IDF v3 (baseline)"
     type: sklearn
     path: models/v3
-    checkpoint: null          # sklearn: path contains joblib files directly
-    active: true
+    checkpoint: null
+    active: false
     color: indigo
     metrics:
       pf_top1: 0.788
       tech_top1: 0.661
       brand_top1: 0.529
       toolname_top1: 0.818
-    memory_mb: 50             # approximate resident RAM for monitoring
+    memory_mb: 50
 
   - id: modernbert-pf-v1
     label: "ModernBERT PF"
@@ -24,7 +25,7 @@ models:
     head: product_family
     path: slm/models/pf
     checkpoint: checkpoint-966
-    active: true
+    active: false
     color: amber
     metrics:
       pf_top1: 0.859
@@ -36,7 +37,7 @@ models:
     head: technology
     path: slm/models/tech
     checkpoint: checkpoint-1932
-    active: true
+    active: false
     color: green
     metrics:
       tech_top1: 0.765
@@ -48,19 +49,19 @@ models:
     head: brand
     path: slm/models/brand
     checkpoint: checkpoint-2312
-    active: true
+    active: false
     color: pink
     metrics:
       brand_top1: 0.803
     memory_mb: 620
 
-  # Synthesized proxy models — public Fly.io deploy (no real SLB data)
+  # Synthesized proxy models — active in public build
   - id: tfidf-synth-v1
     label: "TF-IDF proxy (synthetic)"
     type: sklearn
     path: models/synth_v1
     checkpoint: null
-    active: false
+    active: true
     color: slate
     metrics:
       pf_top1: 0.924
@@ -75,7 +76,7 @@ models:
     head: product_family
     path: slm/models/synthesized/pf
     checkpoint: checkpoint-14994
-    active: false
+    active: true
     color: sky
     metrics:
       pf_top1: 0.933
@@ -87,7 +88,7 @@ models:
     head: technology
     path: slm/models/synthesized/tech
     checkpoint: checkpoint-14994
-    active: false
+    active: true
     color: teal
     metrics:
       tech_top1: 0.551
@@ -99,7 +100,7 @@ models:
     head: brand
     path: slm/models/synthesized/brand
     checkpoint: checkpoint-19712
-    active: false
+    active: true
     color: rose
     metrics:
       brand_top1: 0.245
