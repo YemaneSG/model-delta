@@ -12,7 +12,9 @@ _METADATA: list[dict] = []
 def load_all() -> None:
     """Load all active models at startup. Fail fast with clear errors."""
     model_root = Path(os.environ["MODEL_ROOT"])
-    config_path = Path(__file__).parent / "models.yaml"
+    app_env = os.environ.get("APP_ENV", "internal")
+    config_file = "models-public.yaml" if app_env == "public" else "models.yaml"
+    config_path = Path(__file__).parent / config_file
 
     with config_path.open() as f:
         config = yaml.safe_load(f)
